@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <Effects>
+        <Effect>
+            <EffectName>Attack</EffectName>
+            <Name>Молния</Name>
+            <Nature>Light</Nature>
+            <Mana>5</Mana>
+            <Strength>10</Strength>
+        </Effect>
+        <Effect>
+            <EffectName>Attack</EffectName>
+            <Name>Тёмный огонь</Name>
+            <Nature>Dark</Nature>
+            <Mana>5</Mana>
+            <Strength>10</Strength>
+        </Effect>
+        <Effect>
+            <EffectName>Attack</EffectName>
+            <Name>Огненный шар</Name>
+            <Nature>Light</Nature>
+            <Mana>7</Mana>
+            <Strength>20</Strength>
+        </Effect>
+        <Effect>
+            <EffectName>Attack</EffectName>
+            <Name>Лезвия</Name>
+            <Nature>Physic</Nature>
+            <Mana>3</Mana>
+            <Strength>6</Strength>
+        </Effect>
+        <Effect>
+            <EffectName>ContinuousAttack</EffectName>
+            <Name>Кислота</Name>
+            <Nature>Light</Nature>
+            <Mana>10</Mana>
+            <Strength>10</Strength>
+            <Duration>3</Duration>
+        </Effect>
+        <Effect>
+            <EffectName>ContinuousDefense</EffectName>
+            <Name>Щит</Name>
+            <Nature>None</Nature>
+            <Mana>5</Mana>
+            <Strength>1</Strength>
+            <Duration>3</Duration>
+        </Effect>
+        <Effect>
+            <EffectName>ContinuousDefense</EffectName>
+            <Name>Защита от света</Name>
+            <Nature>Light</Nature>
+            <Mana>5</Mana>
+            <Strength>2</Strength>
+            <Duration>3</Duration>
+        </Effect>
+        <Effect>
+            <EffectName>ContinuousDefense</EffectName>
+            <Name>Защита от тьмы</Name>
+            <Nature>Dark</Nature>
+            <Mana>5</Mana>
+            <Strength>2</Strength>
+            <Duration>3</Duration>
+        </Effect>
+        <Effect>
+            <EffectName>Heal</EffectName>
+            <Name>Исцеление</Name>
+            <Nature>Light</Nature>
+            <Mana>5</Mana>
+            <Strength>20</Strength>
+        </Effect>
+        <Effect>
+            <EffectName>ContinuousHeal</EffectName>
+            <Name>Регенерация</Name>
+            <Nature>Light</Nature>
+            <Mana>10</Mana>
+            <Strength>10</Strength>
+            <Duration>3</Duration>
+        </Effect>
+    </Effects>
+</root>

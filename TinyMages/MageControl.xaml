@@ -1,0 +1,160 @@
+﻿<UserControl x:Class="TinyMages.MageControl"
+             x:Name="MageCtrl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mages="clr-namespace:TinyMages.Characters"
+             xmlns:converter="clr-namespace:TinyMages.Converters"
+             xmlns:effects="clr-namespace:TinyMages.Effects"
+             xmlns:util="clr-namespace:TinyMages.Util"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="200"
+             d:DataContext="{d:DesignInstance mages:Mage, IsDesignTimeCreatable=True}">
+
+    <DockPanel Margin="10" LastChildFill="True">
+        <GroupBox Header="Информация" DockPanel.Dock="Top">
+            <StackPanel Margin="5">
+                <Label Content="{Binding Name}" FontWeight="DemiBold" HorizontalAlignment="Center"/>
+                <Label Content="{Binding Health}" ContentStringFormat="Жизни: {0:0}" HorizontalAlignment="Center"/>
+                <Label Content="{Binding Mana}" ContentStringFormat="Мана: {0:0}" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Книга заклинаний" Margin="0 10" DockPanel.Dock="Top">
+            <StackPanel Margin="5">
+                <DockPanel LastChildFill="True">
+                    <ToggleButton x:Name="EffectFilterButton" Content=" ⇄ " DockPanel.Dock="Right"/>
+                    <ComboBox x:Name="EffectType">
+                        <ComboBox.ItemsSource>
+                            <MultiBinding Converter="{converter:SpellBookConverter}">
+                                <Binding/>
+                                <Binding Path="SelectedItem" ElementName="SpellbookTypeList"/>
+                                <Binding Path="SelectedItem" ElementName="SpellbookDurationTypeList"/>
+                                <Binding Path="SelectedItem" ElementName="SpellbookNatureList"/>
+                            </MultiBinding>
+                        </ComboBox.ItemsSource>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="effects:IEffect">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding Strength, StringFormat=' ↯{0}'}" Foreground="Green"/>
+                                    <TextBlock Text="{Binding Mana, StringFormat=' ⚹{0}'}" Foreground="DarkRed"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </DockPanel>
+                <StackPanel Visibility="{Binding IsChecked, ElementName=EffectFilterButton, Converter={converter:BooleanToVisibilityConverter}}">
+                    <DockPanel>
+                        <Label Content="Тип:" DockPanel.Dock="Left"/>
+                        <ComboBox x:Name="SpellbookTypeList">
+                            <ComboBox.ItemsSource>
+                                <CompositeCollection>
+                                    <ComboBoxItem Content="Все"/>
+                                    <CollectionContainer Collection="{x:Static util:EnumLists.Type}"/>
+                                </CompositeCollection>
+                            </ComboBox.ItemsSource>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="util:EnumDataType">
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="Длит.:" DockPanel.Dock="Left"/>
+                        <ComboBox x:Name="SpellbookDurationTypeList" ItemsSource="{x:Static util:EnumLists.DurationType}">
+                            <!--<ComboBox.ItemsSource>
+                                <CompositeCollection>
+                                    <ComboBoxItem Content="Все"/>
+                                    <CollectionContainer Collection="{x:Static util:EnumLists.DurationType}"/>
+                                </CompositeCollection>
+                            </ComboBox.ItemsSource>-->
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="util:EnumDataDurationType">
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="Природа:" DockPanel.Dock="Left"/>
+                        <ComboBox x:Name="SpellbookNatureList" ItemsSource="{x:Static util:EnumLists.Nature}">
+                            <!--<ComboBox.ItemsSource>
+                                <CompositeCollection>
+                                    <ComboBoxItem Content="Все"/>
+                                    <CollectionContainer Collection="{x:Static util:EnumLists.Nature}"/>
+                                </CompositeCollection>
+                            </ComboBox.ItemsSource>-->
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="util:EnumDataNature">
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </DockPanel>
+                </StackPanel>
+                <Button Command="{Binding AddEffectCommand}" CommandParameter="{Binding SelectedItem, ElementName=EffectType}" Content="Подготовить">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{converter:BooleanMultiConverter Type=AllTrue}">
+                            <Binding Path="SelectedIndex" ElementName="EffectType" Converter="{converter:IsSelectedItemConverter}"/>
+                            <Binding Path="Mana" Converter="{converter:NumberToBooleanConverter Type=Positive}"/>
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Заклинания и эффекты">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="FontWeight" Value="DemiBold"/>
+                        <Setter Property="FontStyle" Value="Italic"/>
+                    </Style>
+                    <Style TargetType="ListBox">
+                        <Setter Property="BorderThickness" Value="0"/>
+                    </Style>
+                </Grid.Resources>
+                <DockPanel Grid.Row="0" Visibility="{Binding PreparedEffects.Count, Converter={converter:NumberToVisibilityConverter Type=Positive}}">
+                    <Label Content="Подготовленные" DockPanel.Dock="Top"/>
+                    <ListBox ItemsSource="{Binding PreparedEffects}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="effects:IEffect">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding Strength, StringFormat=' ↯\{0\}'}" Foreground="Green"/>
+                                    <TextBlock Text="{Binding Duration, StringFormat=' ⟳\{0\}'}" Foreground="Blue"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+                <DockPanel Grid.Row="1" Visibility="{Binding AppliedEffects.Count, Converter={converter:NumberToVisibilityConverter Type=Positive}}">
+                    <Label Content="Действующие" DockPanel.Dock="Top"/>
+                    <ListBox ItemsSource="{Binding AppliedEffects}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="effects:AppliedEffect">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Effect.Name}"/>
+                                    <TextBlock Text="{Binding Effect.Strength, StringFormat=' ↯\{0\}'}" Foreground="Green"/>
+                                    <TextBlock Foreground="Blue">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{converter:RemainsConverter}" StringFormat=" ⟳{0}">
+                                                <Binding Path="RemoveTurn"/>
+                                                <Binding Path="Game.Turn" ElementName="MageCtrl"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Grid>
+        </GroupBox>
+    </DockPanel>
+</UserControl>

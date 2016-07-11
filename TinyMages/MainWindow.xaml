@@ -1,0 +1,42 @@
+﻿<Window x:Class="TinyMages.MainWindow"
+        x:Name="GameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TinyMages"
+        xmlns:game="clr-namespace:TinyMages.Games"
+        xmlns:converter="clr-namespace:TinyMages.Converters"
+        mc:Ignorable="d"
+        Title="Tiny Mages Game"
+        Width="700" MinWidth="700"
+        Height="500" MinHeight="350">
+
+    <Window.DataContext>
+        <game:Game/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <local:MageControl Grid.Column="0" DataContext="{Binding Red}" Game="{Binding DataContext, ElementName=GameWindow}"/>
+        <local:MageControl Grid.Column="2" DataContext="{Binding Blue}" Game="{Binding DataContext, ElementName=GameWindow}"/>
+        
+        <DockPanel Grid.Column="1" LastChildFill="True">
+            <Label Content="{Binding Turn}" ContentStringFormat="Ход: {0}" HorizontalAlignment="Center" DockPanel.Dock="Top"/>
+            <Button Content="Закончить ход" Command="{Binding NextTurnCommand}" HorizontalAlignment="Center" DockPanel.Dock="Top">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{converter:BooleanMultiConverter Type=AllTrue}">
+                        <Binding Path="Red.Health" Converter="{converter:NumberToBooleanConverter Type=Positive}"/>
+                        <Binding Path="Blue.Health" Converter="{converter:NumberToBooleanConverter Type=Positive}"/>
+                    </MultiBinding>
+                </Button.IsEnabled>
+            </Button>
+            <ListBox ItemsSource="{Binding Messages}" Margin="10"/>
+        </DockPanel>
+    </Grid>
+</Window>

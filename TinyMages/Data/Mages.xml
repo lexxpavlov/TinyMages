@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <Mages>
+        <Mage>
+            <Name>Мерлин</Name>
+            <Health>100</Health>
+            <Mana>10</Mana>
+            <Strength>0</Strength>
+            <Defense>0</Defense>
+            <SpellBook LearnAll="True">
+                <Effect Name="Щит" Applied="True"/>
+            </SpellBook>
+        </Mage>
+        <Mage>
+            <Name>Дамблдор</Name>
+            <Health>100</Health>
+            <Mana>10</Mana>
+            <Strength>0</Strength>
+            <Defense>0</Defense>
+            <SpellBook LearnAll="True">
+                <Effect Name="Щит" Applied="True"/>
+            </SpellBook>
+        </Mage>
+    </Mages>
+</root>
